@@ -1,81 +1,1251 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AzerothCore SOAP 管理工具</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#0a0e1a;min-height:100vh;display:flex;color:#f0e6d0}.sidebar{width:260px;background:rgba(20,25,45,0.95);backdrop-filter:blur(10px);border-right:1px solid rgba(255,255,255,0.06);height:100vh;position:sticky;top:0;overflow-y:auto;display:flex;flex-direction:column;flex-shrink:0;transition:transform .3s ease}.sidebar-header{padding:20px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}.sidebar-header h2{font-size:18px;color:#f0e6d0;display:flex;align-items:center;gap:10px}.sidebar-header .sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px}.sidebar-commands{flex:1;overflow-y:auto;padding:12px 0}.command-category{margin-bottom:4px}.category-header{padding:8px 20px;color:rgba(255,255,255,0.4);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:color .2s;user-select:none}.category-header:hover{color:rgba(255,255,255,0.7)}.category-header .arrow{transition:transform .3s;font-size:10px}.category-header .arrow.collapsed{transform:rotate(-90deg)}.category-commands{overflow:hidden;transition:max-height .3s ease;max-height:2000px}.category-commands.collapsed{max-height:0!important}.command-item{padding:5px 20px 5px 32px;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;transition:all .2s;font-family:'Courier New',monospace;border-left:2px solid transparent}.command-item:hover{background:rgba(108,92,231,0.1);color:#a29bfe;border-left-color:#6c5ce7}.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0}.sidebar-footer .status{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.5)}.sidebar-footer .dot{width:8px;height:8px;border-radius:50%;display:inline-block}.sidebar-footer .dot.online{background:#00e676;box-shadow:0 0 10px rgba(0,230,118,0.3)}.sidebar-footer .dot.offline{background:#ff5252;box-shadow:0 0 10px rgba(255,82,82,0.3)}.sidebar-footer .dot.connecting{background:#ffc107;animation:pulse 1s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}.main-content{flex:1;padding:30px 40px;overflow-y:auto;max-height:100vh}.main-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:12px}.main-header h1{font-size:26px;font-weight:600;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.main-header h1 small{font-size:14px;color:rgba(255,255,255,0.3);font-weight:400}.header-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.lang-selector{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 14px;color:#f0e6d0;font-size:13px;cursor:pointer;transition:all .3s;outline:none;min-width:140px}.lang-selector:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)}.lang-selector option{background:#1a1f35;color:#f0e6d0}.config-toggle-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 18px;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .3s;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}.config-toggle-btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)}.config-panel{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px;margin-bottom:24px;display:none}.config-panel.open{display:block;animation:slideDown .3s ease}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.config-panel .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px}.config-panel .form-group{display:flex;flex-direction:column;gap:6px}.config-panel .form-group label{color:rgba(255,255,255,0.5);font-size:12px;font-weight:500;letter-spacing:.3px}.config-panel .form-group input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;color:#f0e6d0;font-size:14px;transition:all .3s}.config-panel .form-group input:focus{outline:none;border-color:#6c5ce7;background:rgba(255,255,255,0.1);box-shadow:0 0 0 3px rgba(108,92,231,0.1)}.config-panel .form-group input::placeholder{color:rgba(255,255,255,0.2)}.config-panel .form-actions{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}.btn{padding:10px 24px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:8px}.btn-primary{background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;box-shadow:0 4px 15px rgba(108,92,231,0.25)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(108,92,231,0.35)}.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none!important}.btn-success{background:linear-gradient(135deg,#00b894,#00e676);color:#fff;box-shadow:0 4px 15px rgba(0,184,148,0.25)}.btn-success:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(0,184,148,0.35)}.btn-secondary{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.08)}.btn-secondary:hover{background:rgba(255,255,255,0.1)}.command-area{margin-bottom:20px}.command-input-group{display:flex;gap:12px}.command-input-group input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;color:#f0e6d0;font-size:14px;font-family:'Courier New',monospace;transition:all .3s}.command-input-group input:focus{outline:none;border-color:#6c5ce7;background:rgba(255,255,255,0.1);box-shadow:0 0 0 3px rgba(108,92,231,0.1)}.command-input-group input:disabled{opacity:.4;cursor:not-allowed}.command-input-group input::placeholder{color:rgba(255,255,255,0.2)}.command-toolbar{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.command-toolbar .hint{color:rgba(255,255,255,0.2);font-size:12px}.output-section{background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;min-height:200px;max-height:400px;overflow-y:auto;border:1px solid rgba(255,255,255,0.06)}.output-section pre{color:#b8c7d9;font-family:'Courier New',monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;margin:0}.output-section .status{display:inline-block;padding:2px 12px;border-radius:4px;font-size:11px;font-weight:600;margin-bottom:8px}.status.success{background:rgba(0,230,118,0.15);color:#00e676}.status.error{background:rgba(255,82,82,0.15);color:#ff5252}.status.info{background:rgba(100,181,246,0.15);color:#64b5f6}.status.pending{background:rgba(255,193,7,0.15);color:#ffc107;animation:pulse 1.5s ease-in-out infinite}.status.warning{background:rgba(255,152,0,0.15);color:#ffa726}.output-empty{color:rgba(255,255,255,0.2);font-size:14px;text-align:center;padding:50px 0}.loading-spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.1);border-top-color:#6c5ce7;border-radius:50%;animation:spin .8s linear infinite}.loading-spinner.active{display:inline-block}@keyframes spin{to{transform:rotate(360deg)}}.sidebar::-webkit-scrollbar,.output-section::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track,.output-section::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb,.output-section::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}@media(max-width:768px){.sidebar{position:fixed;left:0;top:0;z-index:1000;transform:translateX(-100%);width:300px}.sidebar.open{transform:translateX(0)}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999}.sidebar-overlay.open{display:block}.main-content{padding:20px;max-height:none}.main-header h1{font-size:20px}.main-header h1 small{display:block;margin-left:0;margin-top:4px}.config-panel .form-row{grid-template-columns:1fr}.command-input-group{flex-direction:column}.btn{width:100%;justify-content:center}.hamburger{display:flex!important}.header-controls{width:100%}.lang-selector{flex:1;min-width:100px}}.hamburger{display:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;color:#f0e6d0;cursor:pointer;font-size:20px}.command-count{font-size:11px;color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05);padding:2px 10px;border-radius:12px}.clickable-command{color:#a29bfe;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;transition:all .2s}.clickable-command:hover{color:#6c5ce7;text-decoration-style:solid}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AzerothCore SOAP 管理工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0e1a;
+            min-height: 100vh;
+            display: flex;
+            color: #f0e6d0;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: rgba(20, 25, 45, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            color: #f0e6d0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header .sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+        }
+
+        .sidebar-commands {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 0;
+        }
+
+        .command-category {
+            margin-bottom: 4px;
+        }
+
+        .category-header {
+            padding: 8px 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.2s;
+            user-select: none;
+        }
+
+        .category-header:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .category-header .arrow {
+            transition: transform 0.3s;
+            font-size: 10px;
+        }
+
+        .category-header .arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .category-commands {
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            max-height: 2000px;
+        }
+
+        .category-commands.collapsed {
+            max-height: 0 !important;
+        }
+
+        .command-item {
+            padding: 5px 20px 5px 32px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            border-left: 2px solid transparent;
+        }
+
+        .command-item:hover {
+            background: rgba(108, 92, 231, 0.1);
+            color: #a29bfe;
+            border-left-color: #6c5ce7;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .sidebar-footer .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .sidebar-footer .dot.online {
+            background: #00e676;
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+        }
+
+        .sidebar-footer .dot.offline {
+            background: #ff5252;
+            box-shadow: 0 0 10px rgba(255, 82, 82, 0.3);
+        }
+
+        .sidebar-footer .dot.connecting {
+            background: #ffc107;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .main-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .main-header h1 small {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 400;
+            margin-left: 12px;
+        }
+
+        .config-toggle-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .config-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .config-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .config-panel.open {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .config-panel .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .config-panel .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .config-panel .form-group label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .config-panel .form-group input {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #f0e6d0;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .config-panel .form-group input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .config-panel .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .config-panel .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(108, 92, 231, 0.35);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00b894, #00e676);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.25);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 184, 148, 0.35);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .command-area {
+            margin-bottom: 20px;
+        }
+
+        .command-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .command-input-group input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #f0e6d0;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .command-input-group input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .command-input-group input:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .command-input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .command-toolbar {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .command-toolbar .hint {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+        }
+
+        .output-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .output-section pre {
+            color: #b8c7d9;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .output-section .status {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .status.success {
+            background: rgba(0, 230, 118, 0.15);
+            color: #00e676;
+        }
+        .status.error {
+            background: rgba(255, 82, 82, 0.15);
+            color: #ff5252;
+        }
+        .status.info {
+            background: rgba(100, 181, 246, 0.15);
+            color: #64b5f6;
+        }
+        .status.pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .status.warning {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ffa726;
+        }
+
+        .output-empty {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #6c5ce7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-spinner.active {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .sidebar::-webkit-scrollbar,
+        .output-section::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track,
+        .output-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb,
+        .output-section::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                z-index: 1000;
+                transform: translateX(-100%);
+                width: 300px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .main-content {
+                padding: 20px;
+                max-height: none;
+            }
+
+            .main-header h1 {
+                font-size: 20px;
+            }
+
+            .main-header h1 small {
+                display: block;
+                margin-left: 0;
+                margin-top: 4px;
+            }
+
+            .config-panel .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .command-input-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hamburger {
+                display: flex !important;
+            }
+        }
+
+        .hamburger {
+            display: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #f0e6d0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .command-count {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+
+        /* ===== 输出区域中的可点击命令 ===== */
+        .clickable-command {
+            color: #a29bfe;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 2px;
+            transition: all 0.2s;
+        }
+
+        .clickable-command:hover {
+            color: #6c5ce7;
+            text-decoration-style: solid;
+        }
+    </style>
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<nav class="sidebar" id="sidebar">
-<div class="sidebar-header"><h2>⚔️ <span data-lang="nav_title">命令导航</span></h2><div class="sub" data-lang="nav_sub">点击命令自动填充</div></div>
-<div class="sidebar-commands" id="commandList"><div style="padding:20px;text-align:center;color:rgba(255,255,255,0.3);font-size:13px;"><div style="font-size:32px;margin-bottom:12px;">📡</div><span data-lang="nav_empty">连接服务器后自动加载</span></div></div>
-<div class="sidebar-footer"><div class="status"><span class="dot offline" id="sidebarDot"></span><span id="sidebarStatus" data-lang="status_disconnected">未连接</span><span style="flex:1"></span><span class="command-count" id="cmdCount">0 <span data-lang="cmd_count">个命令</span></span></div></div>
-</nav>
-<div class="main-content">
-<div class="main-header">
-<div style="display:flex;align-items:center;gap:16px;"><button class="hamburger" id="hamburgerBtn">☰</button><h1>⚔️ AzerothCore SOAP <small data-lang="header_sub">GM 管理工具</small></h1></div>
-<div class="header-controls">
-<select class="lang-selector" id="langSelector">
-<option value="zh-CN">🌏 中文</option><option value="en">🌏 English</option><option value="es">🌏 Español</option><option value="fr">🌏 Français</option><option value="de">🌏 Deutsch</option><option value="ja">🌏 日本語</option><option value="ko">🌏 한국어</option><option value="ru">🌏 Русский</option><option value="pt">🌏 Português</option><option value="it">🌏 Italiano</option><option value="ar">🌏 العربية</option><option value="hi">🌏 हिन्दी</option>
-</select>
-<button class="config-toggle-btn" id="configToggleBtn">⚙️ <span data-lang="config_show">显示配置</span></button>
-</div></div>
-<div class="config-panel" id="configPanel">
-<div class="form-row"><div class="form-group"><label data-lang="config_host">服务器地址</label><input type="text" id="serverHost" value="127.0.0.1" placeholder="127.0.0.1"></div><div class="form-group"><label data-lang="config_port">SOAP 端口</label><input type="number" id="serverPort" value="7878" placeholder="7878"></div></div>
-<div class="form-row"><div class="form-group"><label data-lang="config_username">GM 用户名</label><input type="text" id="gmUsername" placeholder="admin"></div><div class="form-group"><label data-lang="config_password">GM 密码</label><input type="password" id="gmPassword" placeholder="••••••••"></div></div>
-<div class="form-actions"><button class="btn btn-primary" id="connectBtn"><span class="loading-spinner" id="connectSpinner"></span><span id="connectBtnText" data-lang="btn_connect">🔗 连接服务器</span></button><button class="btn btn-secondary" id="saveConfigBtn" data-lang="btn_save">💾 保存配置</button></div>
-</div>
-<div class="command-area">
-<div class="command-input-group"><input type="text" id="commandInput" placeholder="输入 GM 命令..." disabled /><button class="btn btn-success" id="executeBtn" disabled><span class="loading-spinner" id="executeSpinner"></span><span id="executeBtnText" data-lang="btn_execute">执行</span></button></div>
-<div class="command-toolbar"><button class="btn btn-secondary" id="clearBtn" style="padding:6px 16px;font-size:12px;" data-lang="btn_clear">🗑️ 清空输出</button><span class="hint" data-lang="hint_click">💡 点击带下划线的命令自动填充</span></div>
-</div>
-<div class="output-section" id="outputArea"><div class="output-empty"><span data-lang="output_empty">💡 连接服务器后自动加载命令列表</span></div></div>
-</div>
-<script>
-(function(){'use strict';
-const L={zh-CN:{nav_title:'命令导航',nav_sub:'点击命令自动填充',nav_empty:'连接服务器后自动加载',status_disconnected:'未连接',status_connecting:'连接中...',status_connected:'已连接',status_failed:'连接失败',status_disconnected_short:'连接断开',cmd_count:'个命令',header_sub:'GM 管理工具',config_show:'显示配置',config_hide:'隐藏配置',config_host:'服务器地址',config_port:'SOAP 端口',config_username:'GM 用户名',config_password:'GM 密码',btn_connect:'🔗 连接服务器',btn_connecting:'连接中...',btn_connected:'✅ 已连接',btn_reconnect:'🔗 重新连接',btn_save:'💾 保存配置',btn_execute:'执行',btn_executing:'执行中...',btn_clear:'🗑️ 清空输出',hint_click:'💡 点击带下划线的命令自动填充',output_empty:'💡 连接服务器后自动加载命令列表',log_info:'信息',log_success:'成功',log_error:'错误',log_pending:'执行中',log_warning:'提示',msg_saved:'✅ 配置已保存',msg_save_failed:'❌ 保存失败: ',msg_connecting:'🔌 正在连接服务器...',msg_connected:'✅ 连接成功！',msg_parse_commands:'📖 正在解析命令列表...',msg_loaded_commands:'✅ 已加载 {count} 个主命令到导航栏',msg_no_commands:'⚠️ 未解析到主命令',msg_fill_hint:'💡 点击带下划线的命令可自动填充执行',msg_enter_command:'⚠️ 请输入要执行的命令',msg_connect_first:'⚠️ 请先连接服务器',msg_executing:'执行命令: ',msg_server_error:'⚠️ 服务器返回 {status}，内容已加载',msg_auth_error:'💡 提示: 请检查GM用户名和密码是否正确',msg_connection_error:'💡 提示: 请检查服务器地址和端口是否正确，确保SOAP服务已启动',msg_disconnected:'⚠️ 连接已断开，请重新连接',msg_config_loaded:'💡 已加载保存的配置，点击「连接服务器」测试连接',msg_config_prompt:'💡 请输入GM账号密码后点击「连接服务器」'},
-en:{nav_title:'Command Navigator',nav_sub:'Click to auto-fill',nav_empty:'Auto-load after connecting',status_disconnected:'Disconnected',status_connecting:'Connecting...',status_connected:'Connected',status_failed:'Connection Failed',status_disconnected_short:'Disconnected',cmd_count:'commands',header_sub:'GM Management Tool',config_show:'Show Config',config_hide:'Hide Config',config_host:'Server Address',config_port:'SOAP Port',config_username:'GM Username',config_password:'GM Password',btn_connect:'🔗 Connect',btn_connecting:'Connecting...',btn_connected:'✅ Connected',btn_reconnect:'🔗 Reconnect',btn_save:'💾 Save Config',btn_execute:'Execute',btn_executing:'Executing...',btn_clear:'🗑️ Clear Output',hint_click:'💡 Click underlined commands to auto-fill',output_empty:'💡 Connect to auto-load command list',log_info:'Info',log_success:'Success',log_error:'Error',log_pending:'Executing',log_warning:'Warning',msg_saved:'✅ Config saved',msg_save_failed:'❌ Save failed: ',msg_connecting:'🔌 Connecting to server...',msg_connected:'✅ Connected successfully!',msg_parse_commands:'📖 Parsing command list...',msg_loaded_commands:'✅ Loaded {count} main commands to sidebar',msg_no_commands:'⚠️ No main commands parsed',msg_fill_hint:'💡 Click underlined commands to auto-fill and execute',msg_enter_command:'⚠️ Please enter a command',msg_connect_first:'⚠️ Please connect to server first',msg_executing:'Executing: ',msg_server_error:'⚠️ Server returned {status}, content loaded',msg_auth_error:'💡 Tip: Check GM username and password',msg_connection_error:'💡 Tip: Check server address and port, ensure SOAP is running',msg_disconnected:'⚠️ Connection lost, please reconnect',msg_config_loaded:'💡 Config loaded, click "Connect" to test',msg_config_prompt:'💡 Enter GM credentials and click "Connect"'},
-es:{nav_title:'Navegador de Comandos',nav_sub:'Haz clic para autocompletar',nav_empty:'Carga automática tras conectar',status_disconnected:'Desconectado',status_connecting:'Conectando...',status_connected:'Conectado',status_failed:'Conexión Fallida',status_disconnected_short:'Desconectado',cmd_count:'comandos',header_sub:'Herramienta de Administración GM',config_show:'Mostrar Config',config_hide:'Ocultar Config',config_host:'Dirección del Servidor',config_port:'Puerto SOAP',config_username:'Usuario GM',config_password:'Contraseña GM',btn_connect:'🔗 Conectar',btn_connecting:'Conectando...',btn_connected:'✅ Conectado',btn_reconnect:'🔗 Reconectar',btn_save:'💾 Guardar Config',btn_execute:'Ejecutar',btn_executing:'Ejecutando...',btn_clear:'🗑️ Limpiar Salida',hint_click:'💡 Haz clic en comandos subrayados para autocompletar',output_empty:'💡 Conéctate para cargar la lista de comandos',log_info:'Información',log_success:'Éxito',log_error:'Error',log_pending:'Ejecutando',log_warning:'Aviso',msg_saved:'✅ Configuración guardada',msg_save_failed:'❌ Error al guardar: ',msg_connecting:'🔌 Conectando al servidor...',msg_connected:'✅ ¡Conectado exitosamente!',msg_parse_commands:'📖 Analizando lista de comandos...',msg_loaded_commands:'✅ Cargados {count} comandos principales',msg_no_commands:'⚠️ No se analizaron comandos principales',msg_fill_hint:'💡 Haz clic en comandos subrayados para autocompletar y ejecutar',msg_enter_command:'⚠️ Por favor ingresa un comando',msg_connect_first:'⚠️ Por favor conecta primero',msg_executing:'Ejecutando: ',msg_server_error:'⚠️ El servidor devolvió {status}, contenido cargado',msg_auth_error:'💡 Consejo: Verifica usuario y contraseña GM',msg_connection_error:'💡 Consejo: Verifica dirección y puerto, asegura que SOAP esté activo',msg_disconnected:'⚠️ Conexión perdida, reconecta',msg_config_loaded:'💡 Configuración cargada, haz clic en "Conectar" para probar',msg_config_prompt:'💡 Ingresa credenciales GM y haz clic en "Conectar"'},
-fr:{nav_title:'Navigateur de Commandes',nav_sub:'Cliquez pour auto-remplir',nav_empty:'Chargement auto après connexion',status_disconnected:'Déconnecté',status_connecting:'Connexion...',status_connected:'Connecté',status_failed:'Échec de Connexion',status_disconnected_short:'Déconnecté',cmd_count:'commandes',header_sub:'Outil de Gestion GM',config_show:'Afficher Config',config_hide:'Masquer Config',config_host:'Adresse du Serveur',config_port:'Port SOAP',config_username:'Nom d\'utilisateur GM',config_password:'Mot de passe GM',btn_connect:'🔗 Se Connecter',btn_connecting:'Connexion...',btn_connected:'✅ Connecté',btn_reconnect:'🔗 Reconnecter',btn_save:'💾 Sauvegarder',btn_execute:'Exécuter',btn_executing:'Exécution...',btn_clear:'🗑️ Effacer',hint_click:'💡 Cliquez sur les commandes soulignées pour auto-remplir',output_empty:'💡 Connectez-vous pour charger la liste',log_info:'Info',log_success:'Succès',log_error:'Erreur',log_pending:'Exécution',log_warning:'Avertissement',msg_saved:'✅ Configuration sauvegardée',msg_save_failed:'❌ Échec de sauvegarde: ',msg_connecting:'🔌 Connexion au serveur...',msg_connected:'✅ Connecté avec succès !',msg_parse_commands:'📖 Analyse des commandes...',msg_loaded_commands:'✅ {count} commandes principales chargées',msg_no_commands:'⚠️ Aucune commande principale analysée',msg_fill_hint:'💡 Cliquez sur les commandes soulignées pour auto-remplir',msg_enter_command:'⚠️ Veuillez entrer une commande',msg_connect_first:'⚠️ Veuillez d\'abord vous connecter',msg_executing:'Exécution: ',msg_server_error:'⚠️ Serveur a renvoyé {status}, contenu chargé',msg_auth_error:'💡 Conseil: Vérifiez identifiant et mot de passe GM',msg_connection_error:'💡 Conseil: Vérifiez adresse et port, assurez-vous que SOAP est actif',msg_disconnected:'⚠️ Connexion perdue, reconnectez-vous',msg_config_loaded:'💡 Configuration chargée, cliquez sur "Se Connecter" pour tester',msg_config_prompt:'💡 Entrez les identifiants GM et cliquez sur "Se Connecter"'},
-de:{nav_title:'Befehlsnavigation',nav_sub:'Klicken zum Auto-Ausfüllen',nav_empty:'Auto-Laden nach Verbindung',status_disconnected:'Getrennt',status_connecting:'Verbinde...',status_connected:'Verbunden',status_failed:'Verbindung Fehlgeschlagen',status_disconnected_short:'Getrennt',cmd_count:'Befehle',header_sub:'GM Verwaltungstool',config_show:'Konfiguration Anzeigen',config_hide:'Konfiguration Ausblenden',config_host:'Serveradresse',config_port:'SOAP Port',config_username:'GM Benutzername',config_password:'GM Passwort',btn_connect:'🔗 Verbinden',btn_connecting:'Verbinde...',btn_connected:'✅ Verbunden',btn_reconnect:'🔗 Neu Verbinden',btn_save:'💾 Konfiguration Speichern',btn_execute:'Ausführen',btn_executing:'Ausführen...',btn_clear:'🗑️ Ausgabe Löschen',hint_click:'💡 Klicke auf unterstrichene Befehle zum Auto-Ausfüllen',output_empty:'💡 Verbinden zum Laden der Befehlsliste',log_info:'Info',log_success:'Erfolg',log_error:'Fehler',log_pending:'Ausführen',log_warning:'Warnung',msg_saved:'✅ Konfiguration gespeichert',msg_save_failed:'❌ Speichern fehlgeschlagen: ',msg_connecting:'🔌 Verbinde zum Server...',msg_connected:'✅ Erfolgreich verbunden!',msg_parse_commands:'📖 Analysiere Befehlsliste...',msg_loaded_commands:'✅ {count} Hauptbefehle geladen',msg_no_commands:'⚠️ Keine Hauptbefehle analysiert',msg_fill_hint:'💡 Klicke auf unterstrichene Befehle zum Auto-Ausfüllen',msg_enter_command:'⚠️ Bitte gib einen Befehl ein',msg_connect_first:'⚠️ Bitte zuerst verbinden',msg_executing:'Ausführe: ',msg_server_error:'⚠️ Server antwortete mit {status}, Inhalt geladen',msg_auth_error:'💡 Tipp: Überprüfe GM Benutzername und Passwort',msg_connection_error:'💡 Tipp: Überprüfe Adresse und Port, SOAP muss laufen',msg_disconnected:'⚠️ Verbindung verloren, bitte neu verbinden',msg_config_loaded:'💡 Konfiguration geladen, klicke "Verbinden" zum Testen',msg_config_prompt:'💡 Gib GM Zugangsdaten ein und klicke "Verbinden"'},
-ja:{nav_title:'コマンドナビゲーター',nav_sub:'クリックで自動入力',nav_empty:'接続後に自動読み込み',status_disconnected:'未接続',status_connecting:'接続中...',status_connected:'接続済み',status_failed:'接続失敗',status_disconnected_short:'切断',cmd_count:'コマンド',header_sub:'GM管理ツール',config_show:'設定を表示',config_hide:'設定を隠す',config_host:'サーバーアドレス',config_port:'SOAPポート',config_username:'GMユーザー名',config_password:'GMパスワード',btn_connect:'🔗 接続',btn_connecting:'接続中...',btn_connected:'✅ 接続済み',btn_reconnect:'🔗 再接続',btn_save:'💾 設定を保存',btn_execute:'実行',btn_executing:'実行中...',btn_clear:'🗑️ 出力をクリア',hint_click:'💡 下線付きコマンドをクリックで自動入力',output_empty:'💡 接続してコマンドリストを読み込み',log_info:'情報',log_success:'成功',log_error:'エラー',log_pending:'実行中',log_warning:'警告',msg_saved:'✅ 設定を保存しました',msg_save_failed:'❌ 保存に失敗しました: ',msg_connecting:'🔌 サーバーに接続中...',msg_connected:'✅ 接続に成功しました！',msg_parse_commands:'📖 コマンドリストを解析中...',msg_loaded_commands:'✅ {count}個のメインコマンドを読み込みました',msg_no_commands:'⚠️ メインコマンドが見つかりません',msg_fill_hint:'💡 下線付きコマンドをクリックで自動入力して実行',msg_enter_command:'⚠️ コマンドを入力してください',msg_connect_first:'⚠️ まずサーバーに接続してください',msg_executing:'実行中: ',msg_server_error:'⚠️ サーバーが {status} を返しました、内容を読み込みました',msg_auth_error:'💡 ヒント: GMユーザー名とパスワードを確認してください',msg_connection_error:'💡 ヒント: アドレスとポートを確認し、SOAPが動作していることを確認してください',msg_disconnected:'⚠️ 接続が切断されました、再接続してください',msg_config_loaded:'💡 設定を読み込みました、「接続」をクリックしてテスト',msg_config_prompt:'💡 GM認証情報を入力して「接続」をクリック'},
-ko:{nav_title:'명령 내비게이터',nav_sub:'클릭하여 자동 입력',nav_empty:'연결 후 자동 로드',status_disconnected:'연결 안됨',status_connecting:'연결 중...',status_connected:'연결됨',status_failed:'연결 실패',status_disconnected_short:'연결 끊김',cmd_count:'개 명령어',header_sub:'GM 관리 도구',config_show:'설정 표시',config_hide:'설정 숨기기',config_host:'서버 주소',config_port:'SOAP 포트',config_username:'GM 사용자명',config_password:'GM 비밀번호',btn_connect:'🔗 연결',btn_connecting:'연결 중...',btn_connected:'✅ 연결됨',btn_reconnect:'🔗 재연결',btn_save:'💾 설정 저장',btn_execute:'실행',btn_executing:'실행 중...',btn_clear:'🗑️ 출력 지우기',hint_click:'💡 밑줄 명령어를 클릭하여 자동 입력',output_empty:'💡 연결하여 명령어 목록 로드',log_info:'정보',log_success:'성공',log_error:'오류',log_pending:'실행 중',log_warning:'경고',msg_saved:'✅ 설정이 저장되었습니다',msg_save_failed:'❌ 저장 실패: ',msg_connecting:'🔌 서버에 연결 중...',msg_connected:'✅ 연결 성공!',msg_parse_commands:'📖 명령어 목록 분석 중...',msg_loaded_commands:'✅ {count}개의 메인 명령어를 로드했습니다',msg_no_commands:'⚠️ 메인 명령어를 찾을 수 없습니다',msg_fill_hint:'💡 밑줄 명령어를 클릭하여 자동 입력 및 실행',msg_enter_command:'⚠️ 명령어를 입력하세요',msg_connect_first:'⚠️ 먼저 서버에 연결하세요',msg_executing:'실행 중: ',msg_server_error:'⚠️ 서버가 {status}를 반환했습니다, 내용 로드됨',msg_auth_error:'💡 힌트: GM 사용자명과 비밀번호를 확인하세요',msg_connection_error:'💡 힌트: 주소와 포트를 확인하고 SOAP가 실행 중인지 확인하세요',msg_disconnected:'⚠️ 연결이 끊어졌습니다, 다시 연결하세요',msg_config_loaded:'💡 설정을 로드했습니다, "연결"을 클릭하여 테스트',msg_config_prompt:'💡 GM 인증 정보를 입력하고 "연결"을 클릭하세요'},
-ru:{nav_title:'Навигатор Команд',nav_sub:'Клик для автозаполнения',nav_empty:'Автозагрузка после подключения',status_disconnected:'Отключено',status_connecting:'Подключение...',status_connected:'Подключено',status_failed:'Ошибка Подключения',status_disconnected_short:'Отключено',cmd_count:'команд',header_sub:'Инструмент GM',config_show:'Показать Конфиг',config_hide:'Скрыть Конфиг',config_host:'Адрес Сервера',config_port:'Порт SOAP',config_username:'Имя GM',config_password:'Пароль GM',btn_connect:'🔗 Подключить',btn_connecting:'Подключение...',btn_connected:'✅ Подключено',btn_reconnect:'🔗 Переподключить',btn_save:'💾 Сохранить',btn_execute:'Выполнить',btn_executing:'Выполнение...',btn_clear:'🗑️ Очистить',hint_click:'💡 Клик по подчёркнутой команде для автозаполнения',output_empty:'💡 Подключитесь для загрузки списка команд',log_info:'Инфо',log_success:'Успех',log_error:'Ошибка',log_pending:'Выполнение',log_warning:'Предупреждение',msg_saved:'✅ Конфигурация сохранена',msg_save_failed:'❌ Ошибка сохранения: ',msg_connecting:'🔌 Подключение к серверу...',msg_connected:'✅ Подключение успешно!',msg_parse_commands:'📖 Анализ списка команд...',msg_loaded_commands:'✅ Загружено {count} основных команд',msg_no_commands:'⚠️ Основные команды не найдены',msg_fill_hint:'💡 Клик по подчёркнутой команде для автозаполнения и выполнения',msg_enter_command:'⚠️ Введите команду',msg_connect_first:'⚠️ Сначала подключитесь к серверу',msg_executing:'Выполнение: ',msg_server_error:'⚠️ Сервер вернул {status}, содержимое загружено',msg_auth_error:'💡 Совет: Проверьте имя и пароль GM',msg_connection_error:'💡 Совет: Проверьте адрес и порт, убедитесь что SOAP запущен',msg_disconnected:'⚠️ Соединение потеряно, переподключитесь',msg_config_loaded:'💡 Конфигурация загружена, нажмите "Подключить" для теста',msg_config_prompt:'💡 Введите данные GM и нажмите "Подключить"'},
-pt:{nav_title:'Navegador de Comandos',nav_sub:'Clique para auto-preencher',nav_empty:'Carregar após conectar',status_disconnected:'Desconectado',status_connecting:'Conectando...',status_connected:'Conectado',status_failed:'Falha na Conexão',status_disconnected_short:'Desconectado',cmd_count:'comandos',header_sub:'Ferramenta de Gestão GM',config_show:'Mostrar Config',config_hide:'Ocultar Config',config_host:'Endereço do Servidor',config_port:'Porta SOAP',config_username:'Usuário GM',config_password:'Senha GM',btn_connect:'🔗 Conectar',btn_connecting:'Conectando...',btn_connected:'✅ Conectado',btn_reconnect:'🔗 Reconectar',btn_save:'💾 Salvar Config',btn_execute:'Executar',btn_executing:'Executando...',btn_clear:'🗑️ Limpar',hint_click:'💡 Clique em comandos sublinhados para auto-preencher',output_empty:'💡 Conecte-se para carregar a lista',log_info:'Info',log_success:'Sucesso',log_error:'Erro',log_pending:'Executando',log_warning:'Aviso',msg_saved:'✅ Configuração salva',msg_save_failed:'❌ Falha ao salvar: ',msg_connecting:'🔌 Conectando ao servidor...',msg_connected:'✅ Conectado com sucesso!',msg_parse_commands:'📖 Analisando lista de comandos...',msg_loaded_commands:'✅ {count} comandos principais carregados',msg_no_commands:'⚠️ Nenhum comando principal analisado',msg_fill_hint:'💡 Clique em comandos sublinhados para auto-preencher e executar',msg_enter_command:'⚠️ Digite um comando',msg_connect_first:'⚠️ Conecte-se primeiro',msg_executing:'Executando: ',msg_server_error:'⚠️ Servidor retornou {status}, conteúdo carregado',msg_auth_error:'💡 Dica: Verifique usuário e senha GM',msg_connection_error:'💡 Dica: Verifique endereço e porta, certifique-se que SOAP está ativo',msg_disconnected:'⚠️ Conexão perdida, reconecte-se',msg_config_loaded:'💡 Configuração carregada, clique em "Conectar" para testar',msg_config_prompt:'💡 Digite credenciais GM e clique em "Conectar"'},
-it:{nav_title:'Navigatore Comandi',nav_sub:'Clicca per auto-compilare',nav_empty:'Caricamento dopo connessione',status_disconnected:'Disconnesso',status_connecting:'Connessione...',status_connected:'Connesso',status_failed:'Connessione Fallita',status_disconnected_short:'Disconnesso',cmd_count:'comandi',header_sub:'Strumento Gestione GM',config_show:'Mostra Config',config_hide:'Nascondi Config',config_host:'Indirizzo Server',config_port:'Porta SOAP',config_username:'Utente GM',config_password:'Password GM',btn_connect:'🔗 Connetti',btn_connecting:'Connessione...',btn_connected:'✅ Connesso',btn_reconnect:'🔗 Riconnetti',btn_save:'💾 Salva Config',btn_execute:'Esegui',btn_executing:'Esecuzione...',btn_clear:'🗑️ Pulisci',hint_click:'💡 Clicca comandi sottolineati per auto-compilare',output_empty:'💡 Connettiti per caricare lista comandi',log_info:'Info',log_success:'Successo',log_error:'Errore',log_pending:'Esecuzione',log_warning:'Avviso',msg_saved:'✅ Configurazione salvata',msg_save_failed:'❌ Salvataggio fallito: ',msg_connecting:'🔌 Connessione al server...',msg_connected:'✅ Connesso con successo!',msg_parse_commands:'📖 Analisi lista comandi...',msg_loaded_commands:'✅ {count} comandi principali caricati',msg_no_commands:'⚠️ Nessun comando principale analizzato',msg_fill_hint:'💡 Clicca comandi sottolineati per auto-compilare ed eseguire',msg_enter_command:'⚠️ Inserisci un comando',msg_connect_first:'⚠️ Connettiti prima',msg_executing:'Esecuzione: ',msg_server_error:'⚠️ Server ha risposto {status}, contenuto caricato',msg_auth_error:'💡 Suggerimento: Verifica utente e password GM',msg_connection_error:'💡 Suggerimento: Verifica indirizzo e porta, assicurati che SOAP sia attivo',msg_disconnected:'⚠️ Connessione persa, riconnettiti',msg_config_loaded:'💡 Configurazione caricata, clicca "Connetti" per testare',msg_config_prompt:'💡 Inserisci credenziali GM e clicca "Connetti"'},
-ar:{nav_title:'متصفح الأوامر',nav_sub:'انقر للتعبئة التلقائية',nav_empty:'تحميل تلقائي بعد الاتصال',status_disconnected:'غير متصل',status_connecting:'جاري الاتصال...',status_connected:'متصل',status_failed:'فشل الاتصال',status_disconnected_short:'منقطع',cmd_count:'أمر',header_sub:'أداة إدارة GM',config_show:'عرض الإعدادات',config_hide:'إخفاء الإعدادات',config_host:'عنوان الخادم',config_port:'منفذ SOAP',config_username:'اسم مستخدم GM',config_password:'كلمة مرور GM',btn_connect:'🔗 اتصال',btn_connecting:'جاري الاتصال...',btn_connected:'✅ متصل',btn_reconnect:'🔗 إعادة اتصال',btn_save:'💾 حفظ الإعدادات',btn_execute:'تنفيذ',btn_executing:'جاري التنفيذ...',btn_clear:'🗑️ مسح',hint_click:'💡 انقر على الأوامر المسطرة للتعبئة التلقائية',output_empty:'💡 اتصل لتحميل قائمة الأوامر',log_info:'معلومات',log_success:'نجاح',log_error:'خطأ',log_pending:'تنفيذ',log_warning:'تحذير',msg_saved:'✅ تم حفظ الإعدادات',msg_save_failed:'❌ فشل الحفظ: ',msg_connecting:'🔌 جاري الاتصال بالخادم...',msg_connected:'✅ تم الاتصال بنجاح!',msg_parse_commands:'📖 جاري تحليل قائمة الأوامر...',msg_loaded_commands:'✅ تم تحميل {count} أمر رئيسي',msg_no_commands:'⚠️ لم يتم العثور على أوامر رئيسية',msg_fill_hint:'💡 انقر على الأوامر المسطرة للتعبئة التلقائية والتنفيذ',msg_enter_command:'⚠️ يرجى إدخال أمر',msg_connect_first:'⚠️ يرجى الاتصال أولاً',msg_executing:'جاري التنفيذ: ',msg_server_error:'⚠️ الخادم أعاد {status}، تم تحميل المحتوى',msg_auth_error:'💡 نصيحة: تحقق من اسم المستخدم وكلمة المرور',msg_connection_error:'💡 نصيحة: تحقق من العنوان والمنفذ، تأكد من تشغيل SOAP',msg_disconnected:'⚠️ انقطع الاتصال، يرجى إعادة الاتصال',msg_config_loaded:'💡 تم تحميل الإعدادات، انقر "اتصال" للاختبار',msg_config_prompt:'💡 أدخل بيانات GM وانقر "اتصال"'},
-hi:{nav_title:'कमांड नेविगेटर',nav_sub:'ऑटो-भरने के लिए क्लिक करें',nav_empty:'कनेक्ट करने के बाद ऑटो-लोड',status_disconnected:'डिस्कनेक्टेड',status_connecting:'कनेक्ट हो रहा है...',status_connected:'कनेक्टेड',status_failed:'कनेक्शन विफल',status_disconnected_short:'डिस्कनेक्टेड',cmd_count:'कमांड',header_sub:'GM प्रबंधन उपकरण',config_show:'कॉन्फ़िग दिखाएं',config_hide:'कॉन्फ़िग छिपाएं',config_host:'सर्वर पता',config_port:'SOAP पोर्ट',config_username:'GM उपयोगकर्ता नाम',config_password:'GM पासवर्ड',btn_connect:'🔗 कनेक्ट करें',btn_connecting:'कनेक्ट हो रहा...',btn_connected:'✅ कनेक्टेड',btn_reconnect:'🔗 पुनः कनेक्ट करें',btn_save:'💾 कॉन्फ़िग सहेजें',btn_execute:'निष्पादित करें',btn_executing:'निष्पादन हो रहा...',btn_clear:'🗑️ साफ़ करें',hint_click:'💡 ऑटो-भरने के लिए रेखांकित कमांड पर क्लिक करें',output_empty:'💡 कमांड सूची लोड करने के लिए कनेक्ट करें',log_info:'जानकारी',log_success:'सफल',log_error:'त्रुटि',log_pending:'निष्पादन',log_warning:'चेतावनी',msg_saved:'✅ कॉन्फ़िग सहेजा गया',msg_save_failed:'❌ सहेजना विफल: ',msg_connecting:'🔌 सर्वर से कनेक्ट हो रहा...',msg_connected:'✅ सफलतापूर्वक कनेक्टेड!',msg_parse_commands:'📖 कमांड सूची का विश्लेषण...',msg_loaded_commands:'✅ {count} मुख्य कमांड लोड किए गए',msg_no_commands:'⚠️ कोई मुख्य कमांड नहीं मिला',msg_fill_hint:'💡 ऑटो-भरने और निष्पादन के लिए रेखांकित कमांड पर क्लिक करें',msg_enter_command:'⚠️ कृपया एक कमांड दर्ज करें',msg_connect_first:'⚠️ पहले सर्वर से कनेक्ट करें',msg_executing:'निष्पादन: ',msg_server_error:'⚠️ सर्वर ने {status} लौटाया, सामग्री लोड हुई',msg_auth_error:'💡 सुझाव: GM उपयोगकर्ता नाम और पासवर्ड जांचें',msg_connection_error:'💡 सुझाव: पता और पोर्ट जांचें, SOAP चालू है सुनिश्चित करें',msg_disconnected:'⚠️ कनेक्शन टूट गया, कृपया पुनः कनेक्ट करें',msg_config_loaded:'💡 कॉन्फ़िग लोड हुआ, परीक्षण के लिए "कनेक्ट करें" क्लिक करें',msg_config_prompt:'💡 GM क्रेडेंशियल दर्ज करें और "कनेक्ट करें" क्लिक करें'}};
-let lang='zh-CN';
-const H=document.getElementById('serverHost'),P=document.getElementById('serverPort'),U=document.getElementById('gmUsername'),PW=document.getElementById('gmPassword'),CB=document.getElementById('connectBtn'),CS=document.getElementById('connectSpinner'),CBT=document.getElementById('connectBtnText'),CTB=document.getElementById('configToggleBtn'),CP=document.getElementById('configPanel'),CI=document.getElementById('commandInput'),EB=document.getElementById('executeBtn'),ES=document.getElementById('executeSpinner'),EBT=document.getElementById('executeBtnText'),OA=document.getElementById('outputArea'),CLB=document.getElementById('clearBtn'),CL=document.getElementById('commandList'),SD=document.getElementById('sidebarDot'),SS=document.getElementById('sidebarStatus'),CC=document.getElementById('cmdCount'),HB=document.getElementById('hamburgerBtn'),SO=document.getElementById('sidebarOverlay'),SB=document.getElementById('sidebar'),SV=document.getElementById('saveConfigBtn'),LS=document.getElementById('langSelector');
-let conn=false;
-function t(k){const d=L[lang]||L['zh-CN'];return d[k]||k}
-function updUI(){document.querySelectorAll('[data-lang]').forEach(el=>{const k=el.dataset.lang,txt=t(k);if(txt){const ic=el.querySelector('span, .emoji');if(ic){el.textContent=txt;el.prepend(ic)}else el.textContent=txt}});if(conn)CBT.textContent=t('btn_connected');else if(CB.disabled)CBT.textContent=t('btn_connecting');else CBT.textContent=t('btn_connect');const op=CP.classList.contains('open');CTB.querySelector('span').textContent=op?t('config_hide'):t('config_show');if(EB.disabled)EBT.textContent=t('btn_executing');else EBT.textContent=t('btn_execute');if(conn)SS.textContent=t('status_connected');else if(SS.textContent.includes('...'))SS.textContent=t('status_connecting');else SS.textContent=t('status_disconnected');const ct=CC.textContent;if(ct.includes(' ')){const n=ct.split(' ')[0];CC.textContent=n+' '+t('cmd_count')}}
-function loadCfg(){try{const s=localStorage.getItem('azeroth_soap_config');if(s){const c=JSON.parse(s);if(c.host)H.value=c.host;if(c.port)P.value=c.port;if(c.username)U.value=c.username;if(c.password)PW.value=c.password;if(c.lang){lang=c.lang;LS.value=c.lang;updUI()}}}catch(e){}}
-function saveCfg(){try{const c={host:H.value||'127.0.0.1',port:P.value||'7878',username:U.value||'',password:PW.value||'',lang:lang};localStorage.setItem('azeroth_soap_config',JSON.stringify(c));log(t('msg_saved'),'success')}catch(e){log(t('msg_save_failed')+e.message,'error')}}
-let cfgOpen=false;CTB.onclick=function(){cfgOpen=!cfgOpen;CP.classList.toggle('open',cfgOpen);CTB.querySelector('span').textContent=cfgOpen?t('config_hide'):t('config_show');try{localStorage.setItem('config_panel_open',JSON.stringify(cfgOpen))}catch(e){}};try{const s=localStorage.getItem('config_panel_open');if(s!==null&&JSON.parse(s)){cfgOpen=true;CP.classList.add('open');CTB.querySelector('span').textContent=t('config_hide')}}catch(e){}
-HB.onclick=function(){SB.classList.toggle('open');SO.classList.toggle('open')};SO.onclick=function(){SB.classList.remove('open');SO.classList.remove('open')};
-function log(msg,type='info',cmds=null){OA.innerHTML='';const e=document.createElement('div');e.style.marginBottom='10px';const s=document.createElement('span');s.className='status '+type;const lb={info:t('log_info'),success:t('log_success'),error:t('log_error'),pending:t('log_pending'),warning:t('log_warning')};s.textContent=lb[type]||t('log_info');const p=document.createElement('pre');if(cmds&&cmds.length>0){let html=msg;for(const c of cmds){const esc=c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');const rg=new RegExp('(\\b'+esc+'\\b)','g');html=html.replace(rg,'<span class="clickable-command" data-cmd="$1">$1</span>')}p.innerHTML=html}else p.textContent=msg;e.appendChild(s);e.appendChild(p);OA.appendChild(e);OA.scrollTop=OA.scrollHeight;if(cmds&&cmds.length>0){const clks=e.querySelectorAll('.clickable-command');clks.forEach(el=>{el.onclick=function(){const c=this.dataset.cmd;fillExec(c)}})}}
-function clearOut(){OA.innerHTML='<div class="output-empty"><span data-lang="output_empty">'+t('output_empty')+'</span></div>'}
-function fillExec(cmd){CI.value=cmd;if(conn)EB.click();else log(t('msg_connect_first'),'error')}
-function buildSOAP(cmd){if(!cmd.startsWith('.'))cmd='.'+cmd;return'<?xml version="1.0" encoding="UTF-8"?>\n<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="urn:AC">\n<SOAP-ENV:Body>\n<ns1:executeCommand>\n<command>'+cmd+'</command>\n</ns1:executeCommand>\n</SOAP-ENV:Body>\n</SOAP-ENV:Envelope>'}
-function extractSOAP(xml){const p=new DOMParser(),d=p.parseFromString(xml,'text/xml');const fs=d.querySelector('faultstring');if(fs)return fs.textContent.trim();const dt=d.querySelector('detail');if(dt)return dt.textContent.trim();const rs=d.querySelector('result');if(rs)return rs.textContent.trim();return xml}
-async function execSOAP(cmd){const host=H.value||'127.0.0.1',port=parseInt(P.value)||7878,user=U.value,pw=PW.value;if(!user||!pw)throw new Error(t('msg_connect_first'));if(!cmd||cmd.trim()==='')throw new Error(t('msg_enter_command'));const xml=buildSOAP(cmd.trim()),url='http://'+host+':'+port+'/';const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/xml','Authorization':'Basic '+btoa(user+':'+pw)},body:xml});const txt=await r.text(),cnt=extractSOAP(txt);if(cnt&&cnt.length>0)return{status:r.status,content:cnt,raw:txt,isError:r.status>=400};if(!r.ok)throw new Error('HTTP '+r.status+': '+r.statusText);return{status:r.status,content:cnt||'命令执行成功',raw:txt,isError:false}}
-function extractAll(text){const cmds=[];const lines=text.split('\n');for(const line of lines){const t=line.trim();if(!t)continue;let m=t.match(/^[\|\-]+\s*([a-zA-Z0-9_]+\s+[a-zA-Z0-9_]+)/);if(m){cmds.push(m[1]);continue}m=t.match(/^[\|\-]+\s*([a-zA-Z0-9_]+)/);if(m){cmds.push(m[1]);continue}const sm=t.match(/^([a-zA-Z0-9_]+\s+[a-zA-Z0-9_]+)\s*/);if(sm){const n=sm[1],ex=['Syntax','USAGE','Possible','subcommands','可以使用','Display','usage','instructions','command','provided','available','commands','###'];if(!ex.includes(n.split(' ')[0])&&n.length>2){cmds.push(n)}continue}const sm2=t.match(/^([a-zA-Z0-9_]+)\s*/);if(sm2){const n=sm2[1],ex=['Syntax','USAGE','Possible','subcommands','可以使用','Display','usage','instructions','command','provided','available','commands','###'];if(!ex.includes(n)&&n.length>1)cmds.push(n)}}return[...new Set(cmds)]}
-function extractMain(text){const cmds=[];const lines=text.split('\n');for(const line of lines){const t=line.trim();if(!t)continue;let m=t.match(/^[\|\-]+\s*([a-zA-Z0-9_]+)/);if(m){cmds.push(m[1]);continue}const sm=t.match(/^([a-zA-Z0-9_]+)\s*/);if(sm){const n=sm[1],ex=['Syntax','USAGE','Possible','subcommands','可以使用','Display','usage','instructions','command','provided','available','commands','###'];if(!ex.includes(n)&&n.length>1)cmds.push(n)}}return[...new Set(cmds)]}
-function categorize(cmds){const cats={};for(const n of cmds){let cat='其他';if(n.startsWith('server'))cat='服务器管理';else if(n.startsWith('player')||n.startsWith('character')||n.startsWith('pinfo'))cat='玩家管理';else if(n.startsWith('tele')||n.startsWith('go')||n.startsWith('worldport'))cat='传送';else if(n.startsWith('npc')||n.startsWith('creature')||n.startsWith('bot'))cat='NPC/生物管理';else if(n.startsWith('item')||n.startsWith('add')||n.startsWith('lookup'))cat='物品查找';else if(n.startsWith('reload'))cat='重载配置';else if(n.startsWith('announce')||n.startsWith('whisper')||n.startsWith('send')||n.startsWith('notify'))cat='消息系统';else if(n.startsWith('modify')||n.startsWith('set')||n.startsWith('level')||n.startsWith('reset'))cat='修改属性';else if(n.startsWith('kick')||n.startsWith('ban')||n.startsWith('unban')||n.startsWith('mute')||n.startsWith('unmute'))cat='封禁管理';else if(n.startsWith('quest'))cat='任务管理';else if(n.startsWith('group')||n.startsWith('guild'))cat='社交管理';else if(n.startsWith('debug'))cat='调试命令';else if(n.startsWith('account')||n.startsWith('password'))cat='账号管理';else if(n.startsWith('help')||n.startsWith('commands'))cat='帮助';else if(n.startsWith('list')||n.startsWith('lookup'))cat='查找列表';else if(n.startsWith('ticket'))cat='工单管理';else if(n.startsWith('instance')||n.startsWith('arena')||n.startsWith('lfg'))cat='副本竞技场';else if(n.startsWith('save')||n.startsWith('flush'))cat='数据保存';else if(n.startsWith('achievement'))cat='成就';else if(n.startsWith('deserter'))cat='惩罚管理';else if(n.startsWith('pdump'))cat='玩家数据';else if(n.startsWith('worldstate'))cat='世界状态';else if(n.startsWith('combatstop')||n.startsWith('revive')||n.startsWith('unstuck'))cat='战斗复活';else if(n.startsWith('event'))cat='事件管理';else if(n.startsWith('disable'))cat='禁用管理';else if(n.startsWith('cache'))cat='缓存管理';else if(n.startsWith('gm'))cat='GM管理';if(!cats[cat])cats[cat]=[];cats[cat].push('.'+n)}return cats}
-function render(cats){CL.innerHTML='';let total=0;if(!cats||Object.keys(cats).length===0){CL.innerHTML='<div style="padding:20px;text-align:center;color:rgba(255,255,255,0.3);font-size:13px;"><div style="font-size:32px;margin-bottom:12px;">📭</div><span data-lang="nav_empty">'+t('nav_empty')+'</span></div>';CC.textContent='0 '+t('cmd_count');return}const sorted=Object.keys(cats).sort();for(const cat of sorted){const cmds=cats[cat];if(!cmds||cmds.length===0)continue;total+=cmds.length;const div=document.createElement('div');div.className='command-category';const hdr=document.createElement('div');hdr.className='category-header';hdr.innerHTML=cat+' <span style="display:flex;align-items:center;gap:8px;"><span style="font-size:10px;color:rgba(255,255,255,0.2);">'+cmds.length+'</span><span class="arrow">▼</span></span>';const cnt=document.createElement('div');cnt.className='category-commands';const idx=sorted.indexOf(cat);if(idx>=3){cnt.classList.add('collapsed');hdr.querySelector('.arrow').classList.add('collapsed')}hdr.onclick=function(){const c=cnt.classList.toggle('collapsed');hdr.querySelector('.arrow').classList.toggle('collapsed',c)};for(const c of cmds){const it=document.createElement('div');it.className='command-item';it.textContent=c;it.onclick=function(){fillExec(c)};cnt.appendChild(it)}div.appendChild(hdr);div.appendChild(cnt);CL.appendChild(div)}CC.textContent=total+' '+t('cmd_count')}
-async function handleConnect(){saveCfg();CB.disabled=true;CS.classList.add('active');CBT.textContent=t('btn_connecting');SD.className='dot connecting';SS.textContent=t('status_connecting');log(t('msg_connecting'),'pending');try{const r=await execSOAP('help');conn=true;SD.className='dot online';SS.textContent=t('status_connected');CBT.textContent=t('btn_connected');CB.className='btn btn-success';CI.disabled=false;EB.disabled=false;const all=extractAll(r.content),main=extractMain(r.content);if(r.isError)log(t('msg_server_error').replace('{status}',r.status),'warning');else log(t('msg_connected'),'success');const clk=all.filter(c=>c.length>1);log('📖 '+r.content,'info',clk);if(clk.length>0)log(t('msg_fill_hint'),'info');if(main.length>0){const cats=categorize(main);render(cats);log(t('msg_loaded_commands').replace('{count}',main.length),'success')}else log(t('msg_no_commands'),'warning');CI.value='.help'}catch(e){conn=false;SD.className='dot offline';SS.textContent=t('status_failed');CBT.textContent=t('btn_connect');CB.className='btn btn-primary';CI.disabled=true;EB.disabled=true;log('❌ '+e.message,'error');if(e.message.includes('401'))log(t('msg_auth_error'),'info');else if(e.message.includes('ECONNREFUSED')||e.message.includes('fetch'))log(t('msg_connection_error'),'info')}finally{CB.disabled=false;CS.classList.remove('active')}}
-async function handleExec(){const cmd=CI.value.trim();if(!cmd){log(t('msg_enter_command'),'error');return}if(!conn){log(t('msg_connect_first'),'error');return}EB.disabled=true;ES.classList.add('active');EBT.textContent=t('btn_executing');log(t('msg_executing')+cmd,'pending');try{const r=await execSOAP(cmd);const cmds=extractAll(r.content);if(r.isError)log(t('msg_server_error').replace('{status}',r.status),'warning');const clk=cmds.filter(c=>c.length>1);log(r.content,r.isError?'warning':'success',clk);if(clk.length>0)log(t('msg_fill_hint'),'info')}catch(e){log('❌ '+e.message,'error');if(e.message.includes('401')||e.message.includes('ECONNREFUSED')){conn=false;SD.className='dot offline';SS.textContent=t('status_disconnected_short');CBT.textContent=t('btn_reconnect');CB.className='btn btn-primary';CI.disabled=true;EB.disabled=true;log(t('msg_disconnected'),'error')}}finally{EB.disabled=false;ES.classList.remove('active');EBT.textContent=t('btn_execute')}}
-CI.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey&&!CI.disabled){e.preventDefault();handleExec()}};
-CB.onclick=handleConnect;EB.onclick=handleExec;CLB.onclick=clearOut;SV.onclick=saveCfg;
-[H,P,U,PW].forEach(el=>{el.onchange=saveCfg;el.oninput=saveCfg});
-LS.onchange=function(){lang=this.value;updUI();const h=document.querySelector('.command-toolbar .hint');if(h)h.textContent=t('hint_click');const em=OA.querySelector('.output-empty');if(em){const sp=em.querySelector('span');if(sp)sp.textContent=t('output_empty');else em.innerHTML='<span data-lang="output_empty">'+t('output_empty')+'</span>'}saveCfg()};
-loadCfg();updUI();SD.className='dot offline';SS.textContent=t('status_disconnected');CI.disabled=true;EB.disabled=true;const hh=document.querySelector('.command-toolbar .hint');if(hh)hh.textContent=t('hint_click');if(U.value&&PW.value)log(t('msg_config_loaded'),'info');else log(t('msg_config_prompt'),'info')
-})();
-</script>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>⚔️ 命令导航</h2>
+            <div class="sub">点击命令自动填充</div>
+        </div>
+        <div class="sidebar-commands" id="commandList">
+            <div style="padding: 20px; text-align: center; color: rgba(255,255,255,0.3); font-size: 13px;">
+                <div style="font-size: 32px; margin-bottom: 12px;">📡</div>
+                连接服务器后自动加载
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="status">
+                <span class="dot offline" id="sidebarDot"></span>
+                <span id="sidebarStatus">未连接</span>
+                <span style="flex:1"></span>
+                <span class="command-count" id="cmdCount">0 个命令</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="hamburger" id="hamburgerBtn">☰</button>
+                <h1>
+                    AzerothCore SOAP
+                    <small>GM 管理工具</small>
+                </h1>
+            </div>
+            <button class="config-toggle-btn" id="configToggleBtn">
+                ⚙️ 显示配置
+            </button>
+        </div>
+
+        <div class="config-panel" id="configPanel">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>服务器地址</label>
+                    <input type="text" id="serverHost" value="127.0.0.1" placeholder="127.0.0.1">
+                </div>
+                <div class="form-group">
+                    <label>SOAP 端口</label>
+                    <input type="number" id="serverPort" value="7878" placeholder="7878">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>GM 用户名</label>
+                    <input type="text" id="gmUsername" placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label>GM 密码</label>
+                    <input type="password" id="gmPassword" placeholder="••••••••">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" id="connectBtn">
+                    <span class="loading-spinner" id="connectSpinner"></span>
+                    <span id="connectBtnText">🔗 连接服务器</span>
+                </button>
+                <button class="btn btn-secondary" id="saveConfigBtn">💾 保存配置</button>
+            </div>
+        </div>
+
+        <div class="command-area">
+            <div class="command-input-group">
+                <input type="text" id="commandInput" placeholder="输入 GM 命令..." disabled />
+                <button class="btn btn-success" id="executeBtn" disabled>
+                    <span class="loading-spinner" id="executeSpinner"></span>
+                    <span id="executeBtnText">执行</span>
+                </button>
+            </div>
+            <div class="command-toolbar">
+                <button class="btn btn-secondary" id="clearBtn" style="padding: 6px 16px; font-size: 12px;">
+                    🗑️ 清空输出
+                </button>
+                <span class="hint">💡 点击带下划线的命令自动填充</span>
+            </div>
+        </div>
+
+        <div class="output-section" id="outputArea">
+            <div class="output-empty">
+                💡 连接服务器后自动加载命令列表
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const serverHost = document.getElementById('serverHost');
+            const serverPort = document.getElementById('serverPort');
+            const gmUsername = document.getElementById('gmUsername');
+            const gmPassword = document.getElementById('gmPassword');
+            const connectBtn = document.getElementById('connectBtn');
+            const connectSpinner = document.getElementById('connectSpinner');
+            const connectBtnText = document.getElementById('connectBtnText');
+            const configToggleBtn = document.getElementById('configToggleBtn');
+            const configPanel = document.getElementById('configPanel');
+            const commandInput = document.getElementById('commandInput');
+            const executeBtn = document.getElementById('executeBtn');
+            const executeSpinner = document.getElementById('executeSpinner');
+            const executeBtnText = document.getElementById('executeBtnText');
+            const outputArea = document.getElementById('outputArea');
+            const clearBtn = document.getElementById('clearBtn');
+            const commandList = document.getElementById('commandList');
+            const sidebarDot = document.getElementById('sidebarDot');
+            const sidebarStatus = document.getElementById('sidebarStatus');
+            const cmdCount = document.getElementById('cmdCount');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebar = document.getElementById('sidebar');
+            const saveConfigBtn = document.getElementById('saveConfigBtn');
+
+            let isConnected = false;
+            let allCommands = [];
+
+            // ===== 配置面板切换 =====
+            let configOpen = false;
+            configToggleBtn.onclick = function() {
+                configOpen = !configOpen;
+                configPanel.classList.toggle('open', configOpen);
+                configToggleBtn.textContent = configOpen ? '⚙️ 隐藏配置' : '⚙️ 显示配置';
+                try { localStorage.setItem('config_panel_open', JSON.stringify(configOpen)); } catch (e) {}
+            };
+            try {
+                const saved = localStorage.getItem('config_panel_open');
+                if (saved !== null && JSON.parse(saved)) {
+                    configOpen = true;
+                    configPanel.classList.add('open');
+                    configToggleBtn.textContent = '⚙️ 隐藏配置';
+                }
+            } catch (e) {}
+
+            // ===== 移动端侧边栏 =====
+            hamburgerBtn.onclick = function() { sidebar.classList.toggle('open');
+                sidebarOverlay.classList.toggle('open'); };
+            sidebarOverlay.onclick = function() { sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open'); };
+
+            // ===== 配置加载/保存 =====
+            function loadConfig() {
+                try {
+                    const saved = localStorage.getItem('azeroth_soap_config');
+                    if (saved) {
+                        const config = JSON.parse(saved);
+                        if (config.host) serverHost.value = config.host;
+                        if (config.port) serverPort.value = config.port;
+                        if (config.username) gmUsername.value = config.username;
+                        if (config.password) gmPassword.value = config.password;
+                    }
+                } catch (e) {}
+            }
+
+            function saveConfig() {
+                try {
+                    const config = {
+                        host: serverHost.value || '127.0.0.1',
+                        port: serverPort.value || '7878',
+                        username: gmUsername.value || '',
+                        password: gmPassword.value || ''
+                    };
+                    localStorage.setItem('azeroth_soap_config', JSON.stringify(config));
+                    logOutput('✅ 配置已保存', 'success');
+                } catch (e) {
+                    logOutput('❌ 保存失败: ' + e.message, 'error');
+                }
+            }
+
+            // ===== 执行命令（填充到输入框并执行） =====
+            function fillAndExecute(command) {
+                commandInput.value = command;
+                if (isConnected) {
+                    executeBtn.click();
+                } else {
+                    logOutput('⚠️ 请先连接服务器', 'error');
+                }
+            }
+
+            // ===== 日志输出（支持可点击命令） =====
+            function logOutput(message, type = 'info', clickableCommands = null) {
+                const emptyEl = outputArea.querySelector('.output-empty');
+                if (emptyEl) outputArea.innerHTML = '';
+
+                const entry = document.createElement('div');
+                entry.style.marginBottom = '10px';
+
+                const status = document.createElement('span');
+                status.className = 'status ' + type;
+                const labels = { info: '信息', success: '成功', error: '错误', pending: '执行中', warning: '提示' };
+                status.textContent = labels[type] || '信息';
+
+                const pre = document.createElement('pre');
+
+                // 如果有可点击命令，处理文本
+                if (clickableCommands && clickableCommands.length > 0) {
+                    let html = message;
+                    for (const cmd of clickableCommands) {
+                        // 替换命令为可点击的span
+                        const regex = new RegExp('(\\b' + cmd + '\\b)', 'g');
+                        html = html.replace(regex, '<span class="clickable-command" data-cmd="$1">$1</span>');
+                    }
+                    pre.innerHTML = html;
+                } else {
+                    pre.textContent = message;
+                }
+
+                entry.appendChild(status);
+                entry.appendChild(pre);
+                outputArea.appendChild(entry);
+                outputArea.scrollTop = outputArea.scrollHeight;
+
+                // 为可点击命令绑定事件
+                if (clickableCommands && clickableCommands.length > 0) {
+                    const clickables = entry.querySelectorAll('.clickable-command');
+                    clickables.forEach(el => {
+                        el.onclick = function() {
+                            const cmd = this.dataset.cmd;
+                            fillAndExecute(cmd);
+                        };
+                    });
+                }
+            }
+
+            function clearOutput() {
+                outputArea.innerHTML =
+                    `<div class="output-empty">💡 连接服务器后自动加载命令列表</div>`;
+            }
+
+            // ===== SOAP 核心 =====
+            function buildSOAPRequest(command) {
+                if (!command.startsWith('.')) command = '.' + command;
+                return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                    '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="urn:AC">\n' +
+                    '    <SOAP-ENV:Body>\n' +
+                    '        <ns1:executeCommand>\n' +
+                    '            <command>' + command + '</command>\n' +
+                    '        </ns1:executeCommand>\n' +
+                    '    </SOAP-ENV:Body>\n' +
+                    '</SOAP-ENV:Envelope>';
+            }
+
+            function extractSOAPContent(xml) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(xml, 'text/xml');
+
+                const faultString = doc.querySelector('faultstring');
+                if (faultString) {
+                    return faultString.textContent.trim();
+                }
+
+                const detail = doc.querySelector('detail');
+                if (detail) {
+                    return detail.textContent.trim();
+                }
+
+                const result = doc.querySelector('result');
+                if (result) {
+                    return result.textContent.trim();
+                }
+
+                return xml;
+            }
+
+            async function executeSOAPCommand(command) {
+                const host = serverHost.value || '127.0.0.1';
+                const port = parseInt(serverPort.value) || 7878;
+                const username = gmUsername.value;
+                const password = gmPassword.value;
+
+                if (!username || !password) throw new Error('请输入GM用户名和密码');
+                if (!command || command.trim() === '') throw new Error('请输入命令');
+
+                const soapXML = buildSOAPRequest(command.trim());
+                const url = 'http://' + host + ':' + port + '/';
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/xml',
+                        'Authorization': 'Basic ' + btoa(username + ':' + password)
+                    },
+                    body: soapXML
+                });
+
+                const responseText = await response.text();
+                const content = extractSOAPContent(responseText);
+
+                if (content && content.length > 0) {
+                    return {
+                        status: response.status,
+                        content: content,
+                        raw: responseText,
+                        isError: response.status >= 400
+                    };
+                }
+
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                }
+
+                return {
+                    status: response.status,
+                    content: content || '命令执行成功',
+                    raw: responseText,
+                    isError: false
+                };
+            }
+
+            // ===== 提取命令列表（包括子命令） =====
+            function extractAllCommands(text) {
+                const commands = [];
+                const lines = text.split('\n');
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed) continue;
+
+                    // 匹配 "|- server info" 或 "- server info"
+                    let match = trimmed.match(/^[\|\-]+\s*([a-zA-Z0-9_]+\s+[a-zA-Z0-9_]+)/);
+                    if (match) {
+                        commands.push(match[1]);
+                        continue;
+                    }
+
+                    // 匹配 "|- server" 或 "- server"
+                    match = trimmed.match(/^[\|\-]+\s*([a-zA-Z0-9_]+)/);
+                    if (match) {
+                        commands.push(match[1]);
+                        continue;
+                    }
+
+                    // 匹配纯命令
+                    const simpleMatch = trimmed.match(/^([a-zA-Z0-9_]+\s+[a-zA-Z0-9_]+)\s*/);
+                    if (simpleMatch) {
+                        const name = simpleMatch[1];
+                        const exclude = ['Syntax', 'USAGE', 'Possible', 'subcommands', '可以使用', 'Display', 'usage',
+                            'instructions', 'command', 'provided', 'available', 'commands', '###'
+                        ];
+                        if (!exclude.includes(name.split(' ')[0]) && name.length > 2) {
+                            commands.push(name);
+                        }
+                        continue;
+                    }
+
+                    const simpleMatch2 = trimmed.match(/^([a-zA-Z0-9_]+)\s*/);
+                    if (simpleMatch2) {
+                        const name = simpleMatch2[1];
+                        const exclude = ['Syntax', 'USAGE', 'Possible', 'subcommands', '可以使用', 'Display', 'usage',
+                            'instructions', 'command', 'provided', 'available', 'commands', '###'
+                        ];
+                        if (!exclude.includes(name) && name.length > 1) {
+                            commands.push(name);
+                        }
+                    }
+                }
+
+                return [...new Set(commands)];
+            }
+
+            // ===== 提取主命令（用于导航栏） =====
+            function extractMainCommands(text) {
+                const commands = [];
+                const lines = text.split('\n');
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed) continue;
+
+                    // 匹配 "|- server" 或 "- server"
+                    let match = trimmed.match(/^[\|\-]+\s*([a-zA-Z0-9_]+)/);
+                    if (match) {
+                        const name = match[1];
+                        commands.push(name);
+                        continue;
+                    }
+
+                    // 匹配纯命令（不包含空格）
+                    const simpleMatch = trimmed.match(/^([a-zA-Z0-9_]+)\s*/);
+                    if (simpleMatch) {
+                        const name = simpleMatch[1];
+                        const exclude = ['Syntax', 'USAGE', 'Possible', 'subcommands', '可以使用', 'Display', 'usage',
+                            'instructions', 'command', 'provided', 'available', 'commands', '###'
+                        ];
+                        if (!exclude.includes(name) && name.length > 1) {
+                            commands.push(name);
+                        }
+                    }
+                }
+
+                return [...new Set(commands)];
+            }
+
+            // ===== 分类命令 =====
+            function categorizeCommands(commands) {
+                const categories = {};
+
+                for (const name of commands) {
+                    let category = '其他';
+                    const n = name;
+                    if (n.startsWith('server')) category = '服务器管理';
+                    else if (n.startsWith('player') || n.startsWith('character') || n.startsWith('pinfo')) category =
+                        '玩家管理';
+                    else if (n.startsWith('tele') || n.startsWith('go') || n.startsWith('worldport')) category = '传送';
+                    else if (n.startsWith('npc') || n.startsWith('creature') || n.startsWith('bot')) category =
+                        'NPC/生物管理';
+                    else if (n.startsWith('item') || n.startsWith('add') || n.startsWith('lookup')) category = '物品查找';
+                    else if (n.startsWith('reload')) category = '重载配置';
+                    else if (n.startsWith('announce') || n.startsWith('whisper') || n.startsWith('send') || n.startsWith(
+                        'notify')) category = '消息系统';
+                    else if (n.startsWith('modify') || n.startsWith('set') || n.startsWith('level') || n.startsWith(
+                        'reset')) category = '修改属性';
+                    else if (n.startsWith('kick') || n.startsWith('ban') || n.startsWith('unban') || n.startsWith(
+                        'mute') || n.startsWith('unmute')) category = '封禁管理';
+                    else if (n.startsWith('quest')) category = '任务管理';
+                    else if (n.startsWith('group') || n.startsWith('guild')) category = '社交管理';
+                    else if (n.startsWith('debug')) category = '调试命令';
+                    else if (n.startsWith('account') || n.startsWith('password')) category = '账号管理';
+                    else if (n.startsWith('help') || n.startsWith('commands')) category = '帮助';
+                    else if (n.startsWith('list') || n.startsWith('lookup')) category = '查找列表';
+                    else if (n.startsWith('ticket')) category = '工单管理';
+                    else if (n.startsWith('instance') || n.startsWith('arena') || n.startsWith('lfg')) category =
+                        '副本竞技场';
+                    else if (n.startsWith('save') || n.startsWith('flush')) category = '数据保存';
+                    else if (n.startsWith('achievement')) category = '成就';
+                    else if (n.startsWith('deserter')) category = '惩罚管理';
+                    else if (n.startsWith('pdump')) category = '玩家数据';
+                    else if (n.startsWith('worldstate')) category = '世界状态';
+                    else if (n.startsWith('combatstop') || n.startsWith('revive') || n.startsWith('unstuck')) category =
+                        '战斗复活';
+                    else if (n.startsWith('event')) category = '事件管理';
+                    else if (n.startsWith('disable')) category = '禁用管理';
+                    else if (n.startsWith('cache')) category = '缓存管理';
+                    else if (n.startsWith('gm')) category = 'GM管理';
+
+                    if (!categories[category]) categories[category] = [];
+                    categories[category].push('.' + n);
+                }
+
+                return categories;
+            }
+
+            // ===== 渲染导航栏 =====
+            function renderCommands(categories) {
+                commandList.innerHTML = '';
+                let total = 0;
+
+                if (!categories || Object.keys(categories).length === 0) {
+                    commandList.innerHTML =
+                        `<div style="padding:20px;text-align:center;color:rgba(255,255,255,0.3);font-size:13px;">
+                            <div style="font-size:32px;margin-bottom:12px;">📭</div>
+                            未找到命令
+                        </div>`;
+                    cmdCount.textContent = '0 个命令';
+                    return;
+                }
+
+                const sortedCategories = Object.keys(categories).sort();
+
+                for (const categoryName of sortedCategories) {
+                    const commands = categories[categoryName];
+                    if (!commands || commands.length === 0) continue;
+
+                    total += commands.length;
+
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'command-category';
+
+                    const header = document.createElement('div');
+                    header.className = 'category-header';
+                    header.innerHTML = categoryName +
+                        ' <span style="display:flex;align-items:center;gap:8px;">' +
+                        '<span style="font-size:10px;color:rgba(255,255,255,0.2);">' + commands.length + '</span>' +
+                        '<span class="arrow">▼</span></span>';
+
+                    const commandsContainer = document.createElement('div');
+                    commandsContainer.className = 'category-commands';
+
+                    const index = sortedCategories.indexOf(categoryName);
+                    if (index >= 3) {
+                        commandsContainer.classList.add('collapsed');
+                        header.querySelector('.arrow').classList.add('collapsed');
+                    }
+
+                    header.onclick = function() {
+                        const isCollapsed = commandsContainer.classList.toggle('collapsed');
+                        header.querySelector('.arrow').classList.toggle('collapsed', isCollapsed);
+                    };
+
+                    for (const cmd of commands) {
+                        const item = document.createElement('div');
+                        item.className = 'command-item';
+                        item.textContent = cmd;
+
+                        item.onclick = function() {
+                            fillAndExecute(cmd);
+                        };
+
+                        commandsContainer.appendChild(item);
+                    }
+
+                    categoryDiv.appendChild(header);
+                    categoryDiv.appendChild(commandsContainer);
+                    commandList.appendChild(categoryDiv);
+                }
+
+                cmdCount.textContent = total + ' 个命令';
+            }
+
+            // ===== 连接服务器 =====
+            async function handleConnect() {
+                saveConfig();
+
+                connectBtn.disabled = true;
+                connectSpinner.classList.add('active');
+                connectBtnText.textContent = '连接中...';
+                sidebarDot.className = 'dot connecting';
+                sidebarStatus.textContent = '连接中...';
+
+                logOutput('🔌 正在连接服务器...', 'pending');
+
+                try {
+                    const result = await executeSOAPCommand('help');
+
+                    isConnected = true;
+                    sidebarDot.className = 'dot online';
+                    sidebarStatus.textContent = '已连接';
+                    connectBtnText.textContent = '✅ 已连接';
+                    connectBtn.className = 'btn btn-success';
+
+                    commandInput.disabled = false;
+                    executeBtn.disabled = false;
+
+                    // 提取所有命令（包括子命令）
+                    const allCmds = extractAllCommands(result.content);
+                    // 提取主命令
+                    const mainCmds = extractMainCommands(result.content);
+
+                    // 显示结果
+                    if (result.isError) {
+                        logOutput('⚠️ 服务器返回 ' + result.status + '，内容已加载', 'warning');
+                    } else {
+                        logOutput('✅ 连接成功！', 'success');
+                    }
+
+                    // 显示内容，并把命令变成可点击的
+                    const clickableCmds = allCmds.filter(c => c.length > 1);
+                    logOutput('📖 ' + result.content, 'info', clickableCmds);
+
+                    // 显示提示
+                    if (clickableCmds.length > 0) {
+                        logOutput('💡 点击上面带下划线的命令可自动填充执行', 'info');
+                    }
+
+                    // 解析主命令到导航栏
+                    if (mainCmds.length > 0) {
+                        const categories = categorizeCommands(mainCmds);
+                        renderCommands(categories);
+                        logOutput('✅ 已加载 ' + mainCmds.length + ' 个主命令到导航栏', 'success');
+                    } else {
+                        logOutput('⚠️ 未解析到主命令', 'warning');
+                    }
+
+                    commandInput.value = '.help';
+
+                } catch (error) {
+                    isConnected = false;
+                    sidebarDot.className = 'dot offline';
+                    sidebarStatus.textContent = '连接失败';
+                    connectBtnText.textContent = '🔗 连接服务器';
+                    connectBtn.className = 'btn btn-primary';
+                    commandInput.disabled = true;
+                    executeBtn.disabled = true;
+
+                    logOutput('❌ 连接失败: ' + error.message, 'error');
+
+                    if (error.message.includes('401')) {
+                        logOutput('💡 提示: 请检查GM用户名和密码是否正确', 'info');
+                    } else if (error.message.includes('ECONNREFUSED') || error.message.includes('fetch')) {
+                        logOutput('💡 提示: 请检查服务器地址和端口是否正确，确保SOAP服务已启动', 'info');
+                    }
+                } finally {
+                    connectBtn.disabled = false;
+                    connectSpinner.classList.remove('active');
+                }
+            }
+
+            // ===== 执行命令 =====
+            async function handleExecuteCommand() {
+                const command = commandInput.value.trim();
+                if (!command) {
+                    logOutput('⚠️ 请输入要执行的命令', 'error');
+                    return;
+                }
+
+                if (!isConnected) {
+                    logOutput('⚠️ 请先连接服务器', 'error');
+                    return;
+                }
+
+                executeBtn.disabled = true;
+                executeSpinner.classList.add('active');
+                executeBtnText.textContent = '执行中...';
+
+                logOutput('执行命令: ' + command, 'pending');
+
+                try {
+                    const result = await executeSOAPCommand(command);
+
+                    // 提取返回内容中的命令
+                    const cmds = extractAllCommands(result.content);
+
+                    if (result.isError) {
+                        logOutput('⚠️ 服务器返回 ' + result.status, 'warning');
+                    }
+
+                    // 显示内容，命令变为可点击
+                    const clickableCmds = cmds.filter(c => c.length > 1);
+                    logOutput(result.content, result.isError ? 'warning' : 'success', clickableCmds);
+
+                    if (clickableCmds.length > 0) {
+                        logOutput('💡 点击带下划线的命令可自动填充执行', 'info');
+                    }
+
+                } catch (error) {
+                    logOutput('❌ ' + error.message, 'error');
+                    if (error.message.includes('401') || error.message.includes('ECONNREFUSED')) {
+                        isConnected = false;
+                        sidebarDot.className = 'dot offline';
+                        sidebarStatus.textContent = '连接断开';
+                        connectBtnText.textContent = '🔗 重新连接';
+                        connectBtn.className = 'btn btn-primary';
+                        commandInput.disabled = true;
+                        executeBtn.disabled = true;
+                        logOutput('⚠️ 连接已断开，请重新连接', 'error');
+                    }
+                } finally {
+                    executeBtn.disabled = false;
+                    executeSpinner.classList.remove('active');
+                    executeBtnText.textContent = '执行';
+                }
+            }
+
+            // ===== 键盘事件 =====
+            commandInput.onkeydown = function(e) {
+                if (e.key === 'Enter' && !e.shiftKey && !commandInput.disabled) {
+                    e.preventDefault();
+                    handleExecuteCommand();
+                }
+            };
+
+            // ===== 按钮事件 =====
+            connectBtn.onclick = handleConnect;
+            executeBtn.onclick = handleExecuteCommand;
+            clearBtn.onclick = clearOutput;
+            saveConfigBtn.onclick = saveConfig;
+
+            serverHost.onchange = saveConfig;
+            serverHost.oninput = saveConfig;
+            serverPort.onchange = saveConfig;
+            serverPort.oninput = saveConfig;
+            gmUsername.onchange = saveConfig;
+            gmUsername.oninput = saveConfig;
+            gmPassword.onchange = saveConfig;
+            gmPassword.oninput = saveConfig;
+
+            // ===== 初始化 =====
+            loadConfig();
+
+            sidebarDot.className = 'dot offline';
+            sidebarStatus.textContent = '未连接';
+            commandInput.disabled = true;
+            executeBtn.disabled = true;
+
+            if (gmUsername.value && gmPassword.value) {
+                logOutput('💡 已加载保存的配置，点击「连接服务器」测试连接', 'info');
+            } else {
+                logOutput('💡 请输入GM账号密码后点击「连接服务器」', 'info');
+            }
+        })();
+    </script>
 </body>
 </html>
