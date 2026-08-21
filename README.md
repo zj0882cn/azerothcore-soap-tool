@@ -1,44 +1,54 @@
-# AzerothCore SOAP 管理工具
+# AzerothCore SOAP Management Tool
 
-一个基于 Web 的 AzerothCore SOAP 接口管理工具，支持 **12 种语言**。
+[中文](README.zh-CN.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Русский](README.ru.md) · [Português](README.pt.md) · [Italiano](README.it.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md)
 
-## 🌍 支持的语言
+A web-based management tool for the AzerothCore SOAP interface, supporting **12 languages**.
 
-| 语言 | 代码 |
+---
+
+## Supported Languages
+
+| Language | Code |
 |------|------|
-| 中文 | zh-CN |
+| 中文 Chinese | zh-CN |
 | English | en |
 | Español | es |
 | Français | fr |
 | Deutsch | de |
-| 日本語 | ja |
-| 한국어 | ko |
-| Русский | ru |
+| 日本語 Japanese | ja |
+| 한국어 Korean | ko |
+| Русский Russian | ru |
 | Português | pt |
 | Italiano | it |
-| العربية | ar |
-| हिन्दी | hi |
+| العربية Arabic | ar |
+| हिन्दी Hindi | hi |
 
-## 🚀 快速开始
+---
 
-1. 下载 `index.html`
-2. 双击打开（或拖到浏览器）
-3. 选择语言（右上角下拉菜单）
-4. 点击「显示配置」输入服务器信息
-5. 点击「连接服务器」
+## Quick Start
 
-## ✨ 功能特点
+1. Download `index.html`
+2. Double-click to open (or drag into browser)
+3. Select language (dropdown in top-right corner)
+4. Click "Show Config" and enter server information
+5. Click "Connect Server"
 
-- 🌏 12 种语言界面
-- 🔗 命令自动补全
-- 📝 输出区域命令可点击执行
-- 💾 配置自动保存
-- 📱 移动端适配
+---
 
-## 📝 作者
+## Features
+
+- 🌏 12 language interface
+- 🔗 Auto-complete commands
+- 📝 Clickable commands in output area
+- 💾 Auto-save configuration
+- 📱 Mobile-friendly responsive design
+
+---
+
+## Author
 
 **zj0882cn**
 
-## 🙏 致谢
+## Acknowledgments
 
-感谢 [DeepSeek](https://deepseek.com) AI 提供的技术支持
+Thanks to [DeepSeek](https://deepseek.com) AI for providing technical support
